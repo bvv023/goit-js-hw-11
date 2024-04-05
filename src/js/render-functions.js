@@ -1,50 +1,51 @@
-import iziToast from "izitoast";
-import "izitoast/dist/css/iziToast.min.css";
+import { galleryImages } from '../main';
 
-export function renderGallery(images) {
-  const gallery = document.querySelector('.gallery');
-  gallery.innerHTML = '';
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
-  images.forEach(image => {
-    const card = document.createElement('div');
-    card.classList.add('card');
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
 
-    const imageElement = document.createElement('img');
-    imageElement.src = image.webformatURL;
-    imageElement.alt = image.tags;
-    imageElement.classList.add('gallery-image');
-    card.appendChild(imageElement);
+const lightbox = new SimpleLightbox('.gallery-link', {
+  captionsData: 'alt',
+});
 
-    card.addEventListener('click', () => openModal(image));
+export function renderImages(data) {
+  const galleryMarkup = data
+    .map(
+      ({
+        webformatURL,
+        largeImageURL,
+        tags,
+        likes,
+        views,
+        comments,
+        downloads,
+      }) => {
+        return `<li class="gallery-item">
+        <a class="gallery-link" href="${largeImageURL}">
+          <img
+            src="${webformatURL}"
+            data-source="${largeImageURL}"
+            alt="${tags}"
+          />
+          <ul class="gallery-description">
+          <li class="gallery-dscr_item"><h3>Likes</h3><p>${likes}</p>
+          </li>
+          <li class="gallery-dscr_item"><h3>Views</h3><p>${views}</p>
+            </li>
+            <li class="gallery-dscr_item"><h3>Comments</h3><p>${comments}</p>
+              </li>
+              <li class="gallery-dscr_item"><h3>Downloads</h3><p>${downloads}</p>
+                </li>
+          </ul>
+        </a>
+      </li>`;
+      }
+    )
+    .join('');
 
-    gallery.appendChild(card);
-  });
-}
+  galleryImages.insertAdjacentHTML('beforeend', galleryMarkup);
 
-function openModal(image) {
-  const lightbox = new SimpleLightbox('.gallery-image');
-  lightbox.open();
-}
-
-export function showLoadingIndicator() {
-  iziToast.show({
-    title: '',
-    message: 'Loading images...',
-    position: 'topCenter',
-    progressBar: false,
-    timeout: false,
-    closeOnClick: false,
-    displayMode: 'replace'
-  });
-}
-
-export function hideLoadingIndicator() {
-  iziToast.hide({}, document.querySelector('.iziToast'));
-}
-
-export function showErrorMessage() {
-  iziToast.error({
-    title: 'Error',
-    message: 'Sorry, there are no images matching your search query. Please try again!'
-  });
+  lightbox.refresh();
 }
