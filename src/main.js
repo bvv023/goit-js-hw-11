@@ -35,7 +35,7 @@ searchForm.addEventListener('submit', event => {
             backgroundColor: '#EF4040',
             theme: 'light',
             color: 'red',
-            iconUrl: '../img/bi_x-octagon.svg',
+            iconUrl: 'img/bi_x-octagon.svg',
             position: 'topRight',
             timeout: 5000,
             close: false,
