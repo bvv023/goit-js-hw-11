@@ -11,10 +11,15 @@ export function getImage(query) {
   });
   const url = `${BASE_URL}?${parameters}`;
 
-  return fetch(url).then(response => {
-    if (!response.ok) {
-      throw new Error(response.status);
-    }
-    return response.json();
-  });
+  return fetch(url)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(response.status);
+      }
+      return response.json();
+    })
+    .catch(error => {
+      console.error(error);
+      throw new Error('Failed to fetch images. Please try again.');
+    });
 }
